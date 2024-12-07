@@ -45,6 +45,16 @@ fn main() {
         println!("cargo:rerun-if-changed={}", artifact_path.display());
     }
 
+    let py_adder_guest_path = workspace_dir
+        .join("guest-adder-py")
+        .join("guest_adder_py.wasm");
+    if !py_adder_guest_path.exists() {
+        panic!(
+            "Required wasip2 module from guest-adder-py not found at: {}",
+            py_adder_guest_path.display()
+        );
+    }
+
     // Tell cargo to rerun if the sources change
     for component_name in component_names {
         println!(
