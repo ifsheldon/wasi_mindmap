@@ -12,7 +12,14 @@ fn main() {
     for component_name in component_names {
         let status = Command::new("cargo")
             .current_dir(&workspace_dir)
-            .args(["build", "-p", component_name, "--release", "--target", "wasm32-wasip2"])
+            .args([
+                "build",
+                "-p",
+                component_name,
+                "--release",
+                "--target",
+                "wasm32-wasip2",
+            ])
             .status()
             .expect(format!("Failed to build crate {}", component_name).as_str());
 
@@ -27,11 +34,12 @@ fn main() {
     let target_dir = workspace_dir.join("target").join("wasm32-wasip2");
     let component_module_names = ["guest_adder_rs.wasm", "guest_largestring_rs.wasm"];
     for component_module_name in component_module_names {
-        let artifact_path = target_dir
-            .join("release")
-            .join(component_module_name);
+        let artifact_path = target_dir.join("release").join(component_module_name);
         if !artifact_path.exists() {
-            panic!("Required wasip2 module from guest-adder-rs not found at: {}", artifact_path.display());
+            panic!(
+                "Required wasip2 module from guest-adder-rs not found at: {}",
+                artifact_path.display()
+            );
         }
         // Tell cargo to rerun if artifact changes
         println!("cargo:rerun-if-changed={}", artifact_path.display());
@@ -39,6 +47,9 @@ fn main() {
 
     // Tell cargo to rerun if the sources change
     for component_name in component_names {
-        println!("cargo:rerun-if-changed={}", workspace_dir.join(component_name).join("src").display());
+        println!(
+            "cargo:rerun-if-changed={}",
+            workspace_dir.join(component_name).join("src").display()
+        );
     }
 }

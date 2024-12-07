@@ -19,8 +19,7 @@ mod sync_version {
             "./target/wasm32-wasip2/release/guest_adder_rs.wasm",
             "../target/wasm32-wasip2/release/guest_adder_rs.wasm",
         );
-        let bindings = Adder::instantiate(&mut store, &component, &linker)
-                .unwrap();
+        let bindings = Adder::instantiate(&mut store, &component, &linker).unwrap();
         let a = 1;
         let b = 2;
         let result = bindings.call_add(&mut store, a, b).unwrap();
@@ -45,11 +44,9 @@ mod async_version {
             "../target/wasm32-wasip2/release/guest_adder_rs.wasm",
         );
         let async_future = async {
-            let bindings = Adder::instantiate_async(
-                &mut store, &component, &linker,
-            )
-            .await
-            .unwrap();
+            let bindings = Adder::instantiate_async(&mut store, &component, &linker)
+                .await
+                .unwrap();
             let a = 1;
             let b = 2;
             let result = bindings.call_add(&mut store, a, b).await.unwrap();
