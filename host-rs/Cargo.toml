@@ -1,0 +1,10 @@
+[package]
+name = "host-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wasmtime = "27.0"
+wasmtime-wasi = "27.0"
+futures = { version = "0.3", features = ["executor"] }
+clap = { version = "4.0", features = ["derive"] }

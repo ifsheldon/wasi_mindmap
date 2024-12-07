@@ -1,0 +1,5 @@
+# This file is not necessary if you don't need to explicitly set the toolchain
+
+[toolchain]
+#channel = "nightly" # TODO: Add note
+targets = [ "wasm32-wasip2" ]

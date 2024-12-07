@@ -1,0 +1,17 @@
+package component:big-string;
+
+
+interface large-string {
+  resource largestring {
+    constructor();
+    push: func(s: string);
+    get: func() -> string;
+    clear: func();
+  }
+}
+
+world big-string {
+  import large-string;
+  import print: func(s: string) -> bool;
+  export manipulate-large-string: func() -> string;
+}

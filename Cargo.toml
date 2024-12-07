@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = [
+    "guest-adder-rs",
+    "guest-largestring-rs",
+    "host-rs"
+]
+
+[workspace.dependencies]
+wit-bindgen = "0.36"
