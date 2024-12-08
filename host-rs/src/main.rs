@@ -36,6 +36,7 @@ fn main() {
     match cli.module.unwrap_or(Module::All) {
         Module::All => {
             run_adder_rs_sync(&engine_sync);
+            run_interfaced_adder_sync(&engine_sync);
             run_adder_rs_async(&engine_async);
             run_adder_py_sync(&engine_sync);
             run_adder_py_async(&engine_async);
@@ -44,6 +45,7 @@ fn main() {
         }
         Module::RustAdder => {
             run_adder_rs_sync(&engine_sync);
+            run_interfaced_adder_sync(&engine_sync);
             run_adder_rs_async(&engine_async);
         }
         Module::RustLargeString => {

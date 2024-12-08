@@ -1,0 +1,11 @@
+package component:interfaced-adder;
+
+// see https://github.com/bytecodealliance/cargo-component/issues/360 for why this is needed
+
+interface add {
+  add: func(a: s32, b: s32) -> s32;
+}
+
+world adder {
+    export add;
+}

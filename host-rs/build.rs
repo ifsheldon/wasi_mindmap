@@ -7,8 +7,19 @@ fn main() {
         .unwrap()
         .to_owned();
 
-    // First, build `guest-adder-rs` and `guest-largestring-rs` components explicitly
-    let component_names = ["guest-adder-rs", "guest-largestring-rs"];
+    let component_names = [
+        "guest-adder-rs",
+        "guest-interfaced-adder-rs",
+        "guest-largestring-rs",
+    ];
+
+    let component_module_names = [
+        "guest_adder_rs.wasm",
+        "guest_interfaced_adder_rs.wasm",
+        "guest_largestring_rs.wasm",
+    ];
+
+    // First, build components explicitly
     for component_name in component_names {
         let status = Command::new("cargo")
             .current_dir(&workspace_dir)
@@ -32,7 +43,7 @@ fn main() {
 
     // Check if the artifacts (i.e., wasip2 modules) exist
     let target_dir = workspace_dir.join("target").join("wasm32-wasip2");
-    let component_module_names = ["guest_adder_rs.wasm", "guest_largestring_rs.wasm"];
+
     for component_module_name in component_module_names {
         let artifact_path = target_dir.join("release").join(component_module_name);
         if !artifact_path.exists() {
@@ -45,14 +56,18 @@ fn main() {
         println!("cargo:rerun-if-changed={}", artifact_path.display());
     }
 
-    let py_adder_guest_path = workspace_dir
-        .join("guest-adder-py")
-        .join("guest_adder_py.wasm");
-    if !py_adder_guest_path.exists() {
-        panic!(
-            "Required wasip2 module from guest-adder-py not found at: {}",
-            py_adder_guest_path.display()
-        );
+    let py_component_module_names = ["guest_adder_py.wasm", "guest_interfaced_adder_py.wasm"];
+
+    for py_component_module_name in py_component_module_names {
+        let component_path = workspace_dir
+            .join("guest-adder-py")
+            .join(py_component_module_name);
+        if !component_path.exists() {
+            panic!(
+                "Required wasip2 module from guest-adder-py not found at: {}",
+                component_path.display()
+            );
+        }
     }
 
     // Tell cargo to rerun if the sources change

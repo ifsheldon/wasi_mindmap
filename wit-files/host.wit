@@ -1,0 +1,5 @@
+ package component:host;
+
+ world host {
+    import component:interfaced-adder/add;
+ }
