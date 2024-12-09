@@ -1,11 +1,12 @@
-package component:interfaced-adder;
+package component: interfaced-adder;
 
-// see https://github.com/bytecodealliance/cargo-component/issues/360 for why this is needed
+// See https://github.com/bytecodealliance/cargo-component/issues/360 for why this is needed
+// Also according to https://component-model.bytecodealliance.org/creating-and-consuming/composing.html, "Composition happens at the level of interfaces"
 
 interface add {
   add: func(a: s32, b: s32) -> s32;
 }
 
 world adder {
-    export add;
+  export add;
 }
