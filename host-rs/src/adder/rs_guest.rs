@@ -46,7 +46,6 @@ mod interfaced_sync_version {
         let bindings = Adder::instantiate(&mut store, &component, &linker).unwrap();
         let a = 1;
         let b = 2;
-        // TODO: interface0 seems weird, file an issue
         let result = bindings.interface0.call_add(&mut store, a, b).unwrap();
         assert_eq!(result, 3);
     }

@@ -21,7 +21,7 @@ mod sync_version {
             "./guest-adder-py/guest_adder_py.wasm",
             "../guest-adder-py/guest_adder_py.wasm",
         );
-        add_to_linker_sync(&mut linker).unwrap(); //TODO: this can also used with async wasmtime runtime, should file an issue
+        add_to_linker_sync(&mut linker).unwrap();
         let bindings = Adder::instantiate(&mut store, &component, &linker).unwrap();
         let a = 1;
         let b = 2;

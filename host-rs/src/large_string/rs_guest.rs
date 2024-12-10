@@ -104,7 +104,6 @@ mod async_version {
             'life: 'async_trait,
             Self: 'async_trait,
         {
-            // TODO: make a PR for this
             Box::pin(async move {
                 println!("from print async host func: {}", s);
                 true
