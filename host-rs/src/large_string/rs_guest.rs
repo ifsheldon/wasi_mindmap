@@ -76,11 +76,10 @@ mod sync_version {
 }
 
 mod async_version {
+    use async_trait::async_trait;
     use futures::executor::block_on;
 
     use super::*;
-    use core::future::Future;
-    use core::pin::Pin;
 
     bindgen!({
         path: "../wit-files/string.wit",
@@ -95,96 +94,44 @@ mod async_version {
         pub storage: String,
     }
 
+    #[async_trait]
     impl BigStringImports for ComponentRunStates {
-        fn print<'life, 'async_trait>(
-            &'life mut self,
-            s: String,
-        ) -> Pin<Box<dyn Future<Output = bool> + Send + 'async_trait>>
-        where
-            'life: 'async_trait,
-            Self: 'async_trait,
-        {
-            Box::pin(async move {
-                println!("from print async host func: {}", s);
-                true
-            })
+        async fn print(&mut self, s: String) -> bool {
+            println!("from print async host func: {}", s);
+            true
         }
     }
 
     impl component::big_string::large_string::Host for ComponentRunStates {}
 
+    #[async_trait]
     impl component::big_string::large_string::HostLargestring for ComponentRunStates {
-        fn new<'life, 'async_trait>(
-            &'life mut self,
-        ) -> Pin<Box<dyn Future<Output = Resource<LargeString>> + Send + 'async_trait>>
-        where
-            'life: 'async_trait,
-            Self: 'async_trait,
-        {
-            Box::pin(async {
-                self.resource_table
-                    .push(LargeString {
-                        storage: String::new(),
-                    })
-                    .unwrap()
-            })
+        async fn new(&mut self) -> Resource<LargeString> {
+            self.resource_table
+                .push(LargeString {
+                    storage: String::new(),
+                })
+                .unwrap()
         }
 
-        fn push<'life, 'async_trait>(
-            &'life mut self,
-            resource: Resource<LargeString>,
-            s: String,
-        ) -> Pin<Box<dyn Future<Output = ()> + Send + 'async_trait>>
-        where
-            'life: 'async_trait,
-            Self: 'async_trait,
-        {
-            Box::pin(async move {
-                let large_string = self.resource_table.get_mut(&resource).unwrap();
-                large_string.storage.push_str(s.as_str());
-            })
+        async fn push(&mut self, resource: Resource<LargeString>, s: String) {
+            let large_string = self.resource_table.get_mut(&resource).unwrap();
+            large_string.storage.push_str(s.as_str());
         }
 
-        fn get<'life, 'async_trait>(
-            &'life mut self,
-            resource: Resource<LargeString>,
-        ) -> Pin<Box<dyn Future<Output = String> + Send + 'async_trait>>
-        where
-            'life: 'async_trait,
-            Self: 'async_trait,
-        {
-            Box::pin(async move {
-                let large_string = self.resource_table.get(&resource).unwrap();
-                format!("async: {}", large_string.storage)
-            })
+        async fn get(&mut self, resource: Resource<LargeString>) -> String {
+            let large_string = self.resource_table.get(&resource).unwrap();
+            format!("async: {}", large_string.storage)
         }
 
-        fn clear<'life, 'async_trait>(
-            &'life mut self,
-            resource: Resource<LargeString>,
-        ) -> Pin<Box<dyn Future<Output = ()> + Send + 'async_trait>>
-        where
-            'life: 'async_trait,
-            Self: 'async_trait,
-        {
-            Box::pin(async move {
-                let large_string = self.resource_table.get_mut(&resource).unwrap();
-                large_string.storage.clear();
-            })
+        async fn clear(&mut self, resource: Resource<LargeString>) {
+            let large_string = self.resource_table.get_mut(&resource).unwrap();
+            large_string.storage.clear();
         }
 
-        fn drop<'life, 'async_trait>(
-            &'life mut self,
-            resource: Resource<LargeString>,
-        ) -> Pin<Box<dyn Future<Output = wasmtime::Result<()>> + Send + 'async_trait>>
-        where
-            'life: 'async_trait,
-            Self: 'async_trait,
-        {
-            Box::pin(async {
-                let _ = self.resource_table.delete(resource)?;
-                Ok(())
-            })
+        async fn drop(&mut self, resource: Resource<LargeString>) -> wasmtime::Result<()> {
+            let _ = self.resource_table.delete(resource)?;
+            Ok(())
         }
     }
 

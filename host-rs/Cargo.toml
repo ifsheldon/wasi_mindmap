@@ -8,3 +8,4 @@ wasmtime = "27.0"
 wasmtime-wasi = "27.0"
 futures = { version = "0.3", features = ["executor"] }
 clap = { version = "4.0", features = ["derive"] }
+async-trait = "0.1"
