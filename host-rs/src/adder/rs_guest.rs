@@ -46,7 +46,9 @@ mod interfaced_sync_version {
         let bindings = Adder::instantiate(&mut store, &component, &linker).unwrap();
         let a = 1;
         let b = 2;
-        let result = bindings.interface0.call_add(&mut store, a, b).unwrap();
+        // https://github.com/bytecodealliance/wasmtime/issues/9774#issuecomment-2539957106
+        let interface_add = bindings.component_interfaced_adder_add();
+        let result = interface_add.call_add(&mut store, a, b).unwrap();
         assert_eq!(result, 3);
     }
 }
