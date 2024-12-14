@@ -7,6 +7,8 @@ use wasmtime::Engine;
 pub use async_version::run_large_string_async as run_large_string_rs_async;
 pub use sync_version::run_large_string_sync as run_large_string_rs_sync;
 
+// Reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_4_imported_resources/index.html
+
 mod sync_version {
     use super::*;
 
@@ -15,7 +17,10 @@ mod sync_version {
         world: "big-string",
         with: {
             "component:big-string/large-string/largestring": LargeString
-        }
+        },
+        // Interactions with `ResourceTable` can possibly trap so enable the ability
+        // to return traps from generated functions.
+        trappable_imports: true,
     });
 
     pub struct LargeString {
@@ -23,36 +28,37 @@ mod sync_version {
     }
 
     impl BigStringImports for ComponentRunStates {
-        fn print(&mut self, string: String) -> bool {
+        fn print(&mut self, string: String) -> Result<bool, wasmtime::Error> {
             println!("from print sync host func: {}", string);
-            true
+            Ok(true)
         }
     }
 
     impl component::big_string::large_string::Host for ComponentRunStates {}
 
     impl component::big_string::large_string::HostLargestring for ComponentRunStates {
-        fn new(&mut self) -> Resource<LargeString> {
-            self.resource_table
+        fn new(&mut self) -> Result<Resource<LargeString>, wasmtime::Error> {
+            Ok(self.resource_table
                 .push(LargeString {
                     storage: String::new(),
-                })
-                .unwrap()
+                })?)
         }
 
-        fn push(&mut self, resource: Resource<LargeString>, s: String) -> () {
+        fn push(&mut self, resource: Resource<LargeString>, s: String) -> Result<(), wasmtime::Error> {
             let large_string = self.resource_table.get_mut(&resource).unwrap();
             large_string.storage.push_str(s.as_str());
+            Ok(())
         }
 
-        fn get(&mut self, resource: Resource<LargeString>) -> String {
-            let large_string = self.resource_table.get(&resource).unwrap();
-            format!("sync: {}", large_string.storage)
+        fn get(&mut self, resource: Resource<LargeString>) -> Result<String, wasmtime::Error> {
+            let large_string = self.resource_table.get(&resource)?;
+            Ok(format!("sync: {}", large_string.storage))
         }
 
-        fn clear(&mut self, resource: Resource<LargeString>) -> () {
-            let large_string = self.resource_table.get_mut(&resource).unwrap();
+        fn clear(&mut self, resource: Resource<LargeString>) -> Result<(), wasmtime::Error> {
+            let large_string = self.resource_table.get_mut(&resource)?;
             large_string.storage.clear();
+            Ok(())
         }
 
         fn drop(&mut self, resource: Resource<LargeString>) -> wasmtime::Result<()> {
@@ -88,6 +94,9 @@ mod async_version {
         with: {
             "component:big-string/large-string/largestring": LargeString
         },
+        // Interactions with `ResourceTable` can possibly trap so enable the ability
+        // to return traps from generated functions.
+        trappable_imports: true,
     });
 
     pub struct LargeString {
@@ -96,9 +105,9 @@ mod async_version {
 
     #[async_trait]
     impl BigStringImports for ComponentRunStates {
-        async fn print(&mut self, s: String) -> bool {
+        async fn print(&mut self, s: String) -> Result<bool, wasmtime::Error> {
             println!("from print async host func: {}", s);
-            true
+            Ok(true)
         }
     }
 
@@ -106,27 +115,28 @@ mod async_version {
 
     #[async_trait]
     impl component::big_string::large_string::HostLargestring for ComponentRunStates {
-        async fn new(&mut self) -> Resource<LargeString> {
-            self.resource_table
+        async fn new(&mut self) -> Result<Resource<LargeString>, wasmtime::Error> {
+            Ok(self.resource_table
                 .push(LargeString {
                     storage: String::new(),
-                })
-                .unwrap()
+                })?)
         }
 
-        async fn push(&mut self, resource: Resource<LargeString>, s: String) {
-            let large_string = self.resource_table.get_mut(&resource).unwrap();
+        async fn push(&mut self, resource: Resource<LargeString>, s: String) -> Result<(), wasmtime::Error> {
+            let large_string = self.resource_table.get_mut(&resource)?;
             large_string.storage.push_str(s.as_str());
+            Ok(())
         }
 
-        async fn get(&mut self, resource: Resource<LargeString>) -> String {
-            let large_string = self.resource_table.get(&resource).unwrap();
-            format!("async: {}", large_string.storage)
+        async fn get(&mut self, resource: Resource<LargeString>) -> Result<String, wasmtime::Error> {
+            let large_string = self.resource_table.get(&resource)?;
+            Ok(format!("async: {}", large_string.storage))
         }
 
-        async fn clear(&mut self, resource: Resource<LargeString>) {
-            let large_string = self.resource_table.get_mut(&resource).unwrap();
+        async fn clear(&mut self, resource: Resource<LargeString>) -> Result<(), wasmtime::Error> {
+            let large_string = self.resource_table.get_mut(&resource)?;
             large_string.storage.clear();
+            Ok(())
         }
 
         async fn drop(&mut self, resource: Resource<LargeString>) -> wasmtime::Result<()> {
