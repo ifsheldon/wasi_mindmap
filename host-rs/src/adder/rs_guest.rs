@@ -87,6 +87,8 @@ mod interfaced_sync_version {
         // If you know the types of arguments and return values of the function
         let typed_func = func.typed::<(i32, i32), (i32,)>(&store).unwrap();
         let (result,) = typed_func.call(&mut store, (1, 2)).unwrap();
+        // Required, see documentation of TypedFunc::call
+        typed_func.post_return(&mut store).unwrap();
         assert_eq!(result, 3);
     }
 }
