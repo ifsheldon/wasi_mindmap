@@ -1,5 +1,6 @@
+use wasmtime::component::__internal::anyhow::Context;
 use wasmtime::component::{Component, Linker, ResourceTable};
-use wasmtime::{Engine, Store};
+use wasmtime::{Engine, Result, Store};
 use wasmtime_wasi::{WasiCtx, WasiImpl, WasiView};
 
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
@@ -62,16 +63,16 @@ pub fn get_component_linker_store(
     engine: &Engine,
     path: &'static str,
     alt_path: &'static str,
-) -> (
+) -> Result<(
     Component,
     Linker<ComponentRunStates>,
     Store<ComponentRunStates>,
-) {
+)> {
     let component = Component::from_file(engine, path)
         .or_else(|_| Component::from_file(&engine, alt_path))
-        .expect(format!("Cannot find component from path: {path} or {alt_path}").as_str());
+        .with_context(|| format!("Cannot find component from path: {path} or {alt_path}"))?;
     let linker = Linker::new(&engine);
     let state = ComponentRunStates::new();
     let store = Store::new(&engine, state);
-    (component, linker, store)
+    Ok((component, linker, store))
 }

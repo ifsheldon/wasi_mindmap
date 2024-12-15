@@ -1,6 +1,6 @@
 use crate::utils::get_component_linker_store;
 use wasmtime::component::bindgen;
-use wasmtime::Engine;
+use wasmtime::{Engine, Result};
 
 pub use async_version::run_adder_async as run_adder_rs_async;
 pub use interfaced_sync_version::run_adder_dynamic as run_interfaced_adder_dynamic;
@@ -16,17 +16,18 @@ mod sync_version {
         world: "adder",
     });
 
-    pub fn run_adder_sync(engine: &Engine) {
+    pub fn run_adder_sync(engine: &Engine) -> Result<()> {
         let (component, linker, mut store) = get_component_linker_store(
             engine,
             "./target/wasm32-wasip2/release/guest_adder_rs.wasm",
             "../target/wasm32-wasip2/release/guest_adder_rs.wasm",
-        );
-        let bindings = Adder::instantiate(&mut store, &component, &linker).unwrap();
+        )?;
+        let bindings = Adder::instantiate(&mut store, &component, &linker)?;
         let a = 1;
         let b = 2;
-        let result = bindings.call_add(&mut store, a, b).unwrap();
+        let result = bindings.call_add(&mut store, a, b)?;
         assert_eq!(result, 3);
+        Ok(())
     }
 }
 
@@ -38,28 +39,29 @@ mod interfaced_sync_version {
         world: "adder",
     });
 
-    pub fn run_adder_sync(engine: &Engine) {
+    pub fn run_adder_sync(engine: &Engine) -> Result<()> {
         let (component, linker, mut store) = get_component_linker_store(
             engine,
             "./target/wasm32-wasip2/release/guest_interfaced_adder_rs.wasm",
             "../target/wasm32-wasip2/release/guest_interfaced_adder_rs.wasm",
-        );
-        let bindings = Adder::instantiate(&mut store, &component, &linker).unwrap();
+        )?;
+        let bindings = Adder::instantiate(&mut store, &component, &linker)?;
         let a = 1;
         let b = 2;
         // https://github.com/bytecodealliance/wasmtime/issues/9774#issuecomment-2539957106
         let interface_add = bindings.component_interfaced_adder_add();
-        let result = interface_add.call_add(&mut store, a, b).unwrap();
+        let result = interface_add.call_add(&mut store, a, b)?;
         assert_eq!(result, 3);
+        Ok(())
     }
 
-    pub fn run_adder_dynamic(engine: &Engine) {
+    pub fn run_adder_dynamic(engine: &Engine) -> Result<()> {
         let (component, linker, mut store) = get_component_linker_store(
             engine,
             "./target/wasm32-wasip2/release/guest_interfaced_adder_rs.wasm",
             "../target/wasm32-wasip2/release/guest_interfaced_adder_rs.wasm",
-        );
-        let instance = linker.instantiate(&mut store, &component).unwrap();
+        )?;
+        let instance = linker.instantiate(&mut store, &component)?;
         let interface_name = "component:interfaced-adder/add";
         let interface_idx = instance
             .get_export(&mut store, None, interface_name)
@@ -85,11 +87,12 @@ mod interfaced_sync_version {
         }
 
         // If you know the types of arguments and return values of the function
-        let typed_func = func.typed::<(i32, i32), (i32,)>(&store).unwrap();
-        let (result,) = typed_func.call(&mut store, (1, 2)).unwrap();
+        let typed_func = func.typed::<(i32, i32), (i32,)>(&store)?;
+        let (result,) = typed_func.call(&mut store, (1, 2))?;
         // Required, see documentation of TypedFunc::call
-        typed_func.post_return(&mut store).unwrap();
+        typed_func.post_return(&mut store)?;
         assert_eq!(result, 3);
+        Ok(())
     }
 }
 
@@ -103,21 +106,20 @@ mod async_version {
         async: true
     });
 
-    pub fn run_adder_async(engine: &Engine) {
+    pub fn run_adder_async(engine: &Engine) -> Result<()> {
         let (component, linker, mut store) = get_component_linker_store(
             engine,
             "./target/wasm32-wasip2/release/guest_adder_rs.wasm",
             "../target/wasm32-wasip2/release/guest_adder_rs.wasm",
-        );
+        )?;
         let async_future = async {
-            let bindings = Adder::instantiate_async(&mut store, &component, &linker)
-                .await
-                .unwrap();
+            let bindings = Adder::instantiate_async(&mut store, &component, &linker).await?;
             let a = 1;
             let b = 2;
-            let result = bindings.call_add(&mut store, a, b).await.unwrap();
+            let result = bindings.call_add(&mut store, a, b).await?;
             assert_eq!(result, 3);
+            Ok(())
         };
-        block_on(async_future);
+        block_on(async_future)
     }
 }

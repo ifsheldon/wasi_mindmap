@@ -2,7 +2,7 @@ use crate::utils::get_component_linker_store;
 use crate::utils::{bind_interfaces_needed_by_guest_rust_std, ComponentRunStates};
 use wasmtime::component::bindgen;
 use wasmtime::component::Resource;
-use wasmtime::Engine;
+use wasmtime::{Engine, Result};
 
 pub use async_version::run_large_string_async as run_large_string_rs_async;
 pub use sync_version::run_large_string_sync as run_large_string_rs_sync;
@@ -48,7 +48,7 @@ mod sync_version {
             resource: Resource<LargeString>,
             s: String,
         ) -> Result<(), wasmtime::Error> {
-            let large_string = self.resource_table.get_mut(&resource).unwrap();
+            let large_string = self.resource_table.get_mut(&resource)?;
             large_string.storage.push_str(s.as_str());
             Ok(())
         }
@@ -64,23 +64,24 @@ mod sync_version {
             Ok(())
         }
 
-        fn drop(&mut self, resource: Resource<LargeString>) -> wasmtime::Result<()> {
+        fn drop(&mut self, resource: Resource<LargeString>) -> Result<()> {
             let _ = self.resource_table.delete(resource)?;
             Ok(())
         }
     }
 
-    pub fn run_large_string_sync(engine: &Engine) {
+    pub fn run_large_string_sync(engine: &Engine) -> Result<()> {
         let (component, mut linker, mut store) = get_component_linker_store(
             engine,
             "./target/wasm32-wasip2/release/guest_largestring_rs.wasm",
             "../target/wasm32-wasip2/release/guest_largestring_rs.wasm",
-        );
-        BigString::add_to_linker(&mut linker, |s| s).unwrap();
+        )?;
+        BigString::add_to_linker(&mut linker, |s| s)?;
         bind_interfaces_needed_by_guest_rust_std(&mut linker);
-        let bindings = BigString::instantiate(&mut store, &component, &linker).unwrap();
-        let result = bindings.call_manipulate_large_string(store).unwrap();
+        let bindings = BigString::instantiate(&mut store, &component, &linker)?;
+        let result = bindings.call_manipulate_large_string(store)?;
         assert_eq!(result, "sync: ab");
+        Ok(())
     }
 }
 
@@ -148,27 +149,26 @@ mod async_version {
             Ok(())
         }
 
-        async fn drop(&mut self, resource: Resource<LargeString>) -> wasmtime::Result<()> {
+        async fn drop(&mut self, resource: Resource<LargeString>) -> Result<()> {
             let _ = self.resource_table.delete(resource)?;
             Ok(())
         }
     }
 
-    pub fn run_large_string_async(engine: &Engine) {
+    pub fn run_large_string_async(engine: &Engine) -> Result<()> {
         let (component, mut linker, mut store) = get_component_linker_store(
             engine,
             "./target/wasm32-wasip2/release/guest_largestring_rs.wasm",
             "../target/wasm32-wasip2/release/guest_largestring_rs.wasm",
-        );
-        BigString::add_to_linker(&mut linker, |s| s).unwrap();
+        )?;
+        BigString::add_to_linker(&mut linker, |s| s)?;
         bind_interfaces_needed_by_guest_rust_std(&mut linker);
         let async_future = async {
-            let bindings = BigString::instantiate_async(&mut store, &component, &linker)
-                .await
-                .unwrap();
-            let result = bindings.call_manipulate_large_string(store).await.unwrap();
+            let bindings = BigString::instantiate_async(&mut store, &component, &linker).await?;
+            let result = bindings.call_manipulate_large_string(store).await?;
             assert_eq!(result, "async: ab");
+            Ok(())
         };
-        block_on(async_future);
+        block_on(async_future)
     }
 }

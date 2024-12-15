@@ -1,6 +1,7 @@
 use crate::adder::*;
 use crate::large_string::*;
 use clap::{Parser, ValueEnum};
+use wasmtime::Result;
 use wasmtime::{Config, Engine};
 
 mod adder;
@@ -24,40 +25,41 @@ enum Module {
     PythonAdder,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let cli = Cli::parse();
 
     // engines with/without async must be used separately for async and sync instantiation of components
     let engine_sync = Engine::default();
     let mut config = Config::default();
     config.async_support(true);
-    let engine_async = Engine::new(&config).unwrap();
+    let engine_async = Engine::new(&config)?;
 
     match cli.module.unwrap_or(Module::All) {
         Module::All => {
-            run_adder_rs_sync(&engine_sync);
-            run_interfaced_adder_sync(&engine_sync);
-            run_adder_rs_async(&engine_async);
-            run_adder_py_sync(&engine_sync);
-            run_adder_py_async(&engine_async);
-            run_large_string_rs_sync(&engine_sync);
-            run_large_string_rs_async(&engine_async);
+            run_adder_rs_sync(&engine_sync)?;
+            run_interfaced_adder_sync(&engine_sync)?;
+            run_adder_rs_async(&engine_async)?;
+            run_adder_py_sync(&engine_sync)?;
+            run_adder_py_async(&engine_async)?;
+            run_large_string_rs_sync(&engine_sync)?;
+            run_large_string_rs_async(&engine_async)?;
         }
         Module::RustAdder => {
-            run_adder_rs_sync(&engine_sync);
-            run_interfaced_adder_sync(&engine_sync);
-            run_interfaced_adder_dynamic(&engine_sync);
-            run_adder_rs_async(&engine_async);
+            run_adder_rs_sync(&engine_sync)?;
+            run_interfaced_adder_sync(&engine_sync)?;
+            run_interfaced_adder_dynamic(&engine_sync)?;
+            run_adder_rs_async(&engine_async)?;
         }
         Module::RustLargeString => {
-            run_large_string_rs_sync(&engine_sync);
-            run_large_string_rs_async(&engine_async);
+            run_large_string_rs_sync(&engine_sync)?;
+            run_large_string_rs_async(&engine_async)?;
         }
         Module::PythonAdder => {
-            run_adder_py_sync(&engine_sync);
-            run_adder_py_async(&engine_async);
+            run_adder_py_sync(&engine_sync)?;
+            run_adder_py_async(&engine_async)?;
         }
     }
 
     println!("Run without errors!");
+    Ok(())
 }
