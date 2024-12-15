@@ -46,6 +46,7 @@ fn main() {
         Module::RustAdder => {
             run_adder_rs_sync(&engine_sync);
             run_interfaced_adder_sync(&engine_sync);
+            run_interfaced_adder_dynamic(&engine_sync);
             run_adder_rs_async(&engine_async);
         }
         Module::RustLargeString => {
