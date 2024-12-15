@@ -38,13 +38,16 @@ mod sync_version {
 
     impl component::big_string::large_string::HostLargestring for ComponentRunStates {
         fn new(&mut self) -> Result<Resource<LargeString>, wasmtime::Error> {
-            Ok(self.resource_table
-                .push(LargeString {
-                    storage: String::new(),
-                })?)
+            Ok(self.resource_table.push(LargeString {
+                storage: String::new(),
+            })?)
         }
 
-        fn push(&mut self, resource: Resource<LargeString>, s: String) -> Result<(), wasmtime::Error> {
+        fn push(
+            &mut self,
+            resource: Resource<LargeString>,
+            s: String,
+        ) -> Result<(), wasmtime::Error> {
             let large_string = self.resource_table.get_mut(&resource).unwrap();
             large_string.storage.push_str(s.as_str());
             Ok(())
@@ -116,19 +119,25 @@ mod async_version {
     #[async_trait]
     impl component::big_string::large_string::HostLargestring for ComponentRunStates {
         async fn new(&mut self) -> Result<Resource<LargeString>, wasmtime::Error> {
-            Ok(self.resource_table
-                .push(LargeString {
-                    storage: String::new(),
-                })?)
+            Ok(self.resource_table.push(LargeString {
+                storage: String::new(),
+            })?)
         }
 
-        async fn push(&mut self, resource: Resource<LargeString>, s: String) -> Result<(), wasmtime::Error> {
+        async fn push(
+            &mut self,
+            resource: Resource<LargeString>,
+            s: String,
+        ) -> Result<(), wasmtime::Error> {
             let large_string = self.resource_table.get_mut(&resource)?;
             large_string.storage.push_str(s.as_str());
             Ok(())
         }
 
-        async fn get(&mut self, resource: Resource<LargeString>) -> Result<String, wasmtime::Error> {
+        async fn get(
+            &mut self,
+            resource: Resource<LargeString>,
+        ) -> Result<String, wasmtime::Error> {
             let large_string = self.resource_table.get(&resource)?;
             Ok(format!("async: {}", large_string.storage))
         }
