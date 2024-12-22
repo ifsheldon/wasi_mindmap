@@ -16,7 +16,7 @@ mod sync_version {
         path: "../wit-files/string.wit",
         world: "big-string",
         with: {
-            "component:big-string/large-string/largestring": LargeString
+            "wasi-mindmap:big-string/large-string/largestring": LargeString
         },
         // Interactions with `ResourceTable` can possibly trap so enable the ability
         // to return traps from generated functions.
@@ -34,9 +34,9 @@ mod sync_version {
         }
     }
 
-    impl component::big_string::large_string::Host for ComponentRunStates {}
+    impl wasi_mindmap::big_string::large_string::Host for ComponentRunStates {}
 
-    impl component::big_string::large_string::HostLargestring for ComponentRunStates {
+    impl wasi_mindmap::big_string::large_string::HostLargestring for ComponentRunStates {
         fn new(&mut self) -> Result<Resource<LargeString>, wasmtime::Error> {
             Ok(self.resource_table.push(LargeString {
                 storage: String::new(),
@@ -96,7 +96,7 @@ mod async_version {
         world: "big-string",
         async: true,
         with: {
-            "component:big-string/large-string/largestring": LargeString
+            "wasi-mindmap:big-string/large-string/largestring": LargeString
         },
         // Interactions with `ResourceTable` can possibly trap so enable the ability
         // to return traps from generated functions.
@@ -115,10 +115,10 @@ mod async_version {
         }
     }
 
-    impl component::big_string::large_string::Host for ComponentRunStates {}
+    impl wasi_mindmap::big_string::large_string::Host for ComponentRunStates {}
 
     #[async_trait]
-    impl component::big_string::large_string::HostLargestring for ComponentRunStates {
+    impl wasi_mindmap::big_string::large_string::HostLargestring for ComponentRunStates {
         async fn new(&mut self) -> Result<Resource<LargeString>, wasmtime::Error> {
             Ok(self.resource_table.push(LargeString {
                 storage: String::new(),

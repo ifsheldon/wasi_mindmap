@@ -1,4 +1,4 @@
-package component:big-string;
+package wasi-mindmap:big-string;
 
 
 interface large-string {

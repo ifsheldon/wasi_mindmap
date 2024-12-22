@@ -8,7 +8,7 @@ struct LargeString;
 impl Guest for LargeString {
     fn manipulate_large_string() -> String {
         print("hello from Rust guest!");
-        let large_string = component::big_string::large_string::Largestring::new();
+        let large_string = wasi_mindmap::big_string::large_string::Largestring::new();
         large_string.push("a");
         large_string.push("b");
         let s = large_string.get();

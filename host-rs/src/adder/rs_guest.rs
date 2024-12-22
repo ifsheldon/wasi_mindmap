@@ -49,7 +49,7 @@ mod interfaced_sync_version {
         let a = 1;
         let b = 2;
         // https://github.com/bytecodealliance/wasmtime/issues/9774#issuecomment-2539957106
-        let interface_add = bindings.component_interfaced_adder_add();
+        let interface_add = bindings.wasi_mindmap_interfaced_adder_add();
         let result = interface_add.call_add(&mut store, a, b)?;
         assert_eq!(result, 3);
         Ok(())
@@ -62,7 +62,7 @@ mod interfaced_sync_version {
             "../target/wasm32-wasip2/release/guest_interfaced_adder_rs.wasm",
         )?;
         let instance = linker.instantiate(&mut store, &component)?;
-        let interface_name = "component:interfaced-adder/add";
+        let interface_name = "wasi-mindmap:interfaced-adder/add";
         let interface_idx = instance
             .get_export(&mut store, None, interface_name)
             .unwrap();

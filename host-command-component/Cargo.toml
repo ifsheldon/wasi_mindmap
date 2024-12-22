@@ -16,7 +16,7 @@ strip = true
 lto = true
 
 [package.metadata.component]
-package = "component:host-command-component"
+package = "wasi-mindmap:host-command-component"
 
 [package.metadata.component.dependencies]
 
@@ -30,7 +30,7 @@ path = "wit"
 
 # Step 3 in the reference
 [package.metadata.component.target.dependencies]
-"component:interfaced-adder" = { path = "../guest-interfaced-adder-rs/wit" }
+"wasi-mindmap:interfaced-adder" = { path = "../guest-interfaced-adder-rs/wit" }
 
 
 

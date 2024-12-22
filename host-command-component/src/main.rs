@@ -1,5 +1,5 @@
 mod bindings;
-use bindings::component::interfaced_adder::add::add;
+use bindings::wasi_mindmap::interfaced_adder::add::add;
 
 fn main() {
     let result = add(1, 2);

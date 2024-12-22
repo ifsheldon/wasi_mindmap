@@ -1,5 +1,5 @@
- package component:host;
+ package wasi-mindmap:host;
 
  world host {
-    import component:interfaced-adder/add;
+    import wasi-mindmap:interfaced-adder/add;
  }

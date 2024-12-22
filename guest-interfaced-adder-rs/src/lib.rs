@@ -10,7 +10,7 @@ wit_bindgen::generate!({
 // component.
 struct Adder;
 
-impl exports::component::interfaced_adder::add::Guest for Adder {
+impl exports::wasi_mindmap::interfaced_adder::add::Guest for Adder {
     fn add(a: i32, b: i32) -> i32 {
         a + b
     }
