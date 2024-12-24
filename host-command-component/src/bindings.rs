@@ -6,7 +6,8 @@ pub mod wasi_mindmap {
         pub mod add {
             #[used]
             #[doc(hidden)]
-            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
+            static __FORCE_SECTION_REF: fn() =
+                super::super::super::__link_custom_section_describing_imports;
             use super::super::super::_rt;
             #[allow(unused_unsafe, clippy::all)]
             pub fn add(a: i32, b: i32) -> i32 {

@@ -821,6 +821,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "guest-kv-store-rs"
+version = "0.1.0"
+dependencies = [
+ "wit-bindgen",
+]
+
+[[package]]
 name = "guest-largestring-rs"
 version = "0.1.0"
 dependencies = [

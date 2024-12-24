@@ -1,11 +1,11 @@
 use crate::adder::*;
-use crate::large_string::*;
+use crate::kv_store::*;
 use clap::{Parser, ValueEnum};
 use wasmtime::Result;
 use wasmtime::{Config, Engine};
 
 mod adder;
-mod large_string;
+mod kv_store;
 mod utils;
 
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
@@ -21,7 +21,7 @@ struct Cli {
 enum Module {
     All,
     RustAdder,
-    RustLargeString,
+    RustKVStore,
     PythonAdder,
 }
 
@@ -41,8 +41,8 @@ fn main() -> Result<()> {
             run_adder_rs_async(&engine_async)?;
             run_adder_py_sync(&engine_sync)?;
             run_adder_py_async(&engine_async)?;
-            run_large_string_rs_sync(&engine_sync)?;
-            run_large_string_rs_async(&engine_async)?;
+            run_kv_store_rs_sync(&engine_sync)?;
+            run_kv_store_rs_async(&engine_async)?;
         }
         Module::RustAdder => {
             run_adder_rs_sync(&engine_sync)?;
@@ -50,9 +50,9 @@ fn main() -> Result<()> {
             run_interfaced_adder_dynamic(&engine_sync)?;
             run_adder_rs_async(&engine_async)?;
         }
-        Module::RustLargeString => {
-            run_large_string_rs_sync(&engine_sync)?;
-            run_large_string_rs_async(&engine_async)?;
+        Module::RustKVStore => {
+            run_kv_store_rs_sync(&engine_sync)?;
+            run_kv_store_rs_async(&engine_async)?;
         }
         Module::PythonAdder => {
             run_adder_py_sync(&engine_sync)?;

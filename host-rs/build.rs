@@ -10,13 +10,13 @@ fn main() {
     let component_names = [
         "guest-adder-rs",
         "guest-interfaced-adder-rs",
-        "guest-largestring-rs",
+        "guest-kv-store-rs",
     ];
 
     let component_module_names = [
         "guest_adder_rs.wasm",
         "guest_interfaced_adder_rs.wasm",
-        "guest_largestring_rs.wasm",
+        "guest_kv_store_rs.wasm",
     ];
 
     // First, build components explicitly
