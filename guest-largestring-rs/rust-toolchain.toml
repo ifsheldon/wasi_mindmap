@@ -1,5 +1,0 @@
-# This file is not necessary if you don't need to explicitly set the toolchain
-
-[toolchain]
-#channel = "nightly" # https://github.com/rust-lang/rust/issues/133235#issuecomment-2491533929 for why this may be useful
-targets = [ "wasm32-wasip2" ]
