@@ -16,6 +16,6 @@ impl exports::wasi_mindmap::interfaced_adder::add::Guest for Adder {
     }
 }
 
-// export! defines that the `Math` struct defined below is going to define
-// the exports of the `world`, namely the `run` function.
+// export! defines that the `Adder` struct defined below is going to define
+// the exports of the `world`
 export!(Adder);
