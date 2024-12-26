@@ -1,4 +1,4 @@
-use wasmtime::component::__internal::anyhow::Context;
+use anyhow::Context;
 use wasmtime::component::{Component, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};
 use wasmtime_wasi::{WasiCtx, WasiImpl, WasiView};
