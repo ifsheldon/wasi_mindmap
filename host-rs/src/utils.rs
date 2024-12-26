@@ -1,7 +1,8 @@
 use anyhow::Context;
 use wasmtime::component::{Component, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};
-use wasmtime_wasi::{WasiCtx, WasiImpl, WasiView};
+use wasmtime_wasi::WasiImpl;
+use wasmtime_wasi::{WasiCtx, WasiView};
 
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
 // reference: https://docs.wasmtime.dev/examples-rust-wasi.html
