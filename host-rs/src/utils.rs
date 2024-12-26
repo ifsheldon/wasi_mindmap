@@ -2,7 +2,7 @@ use anyhow::Context;
 use wasmtime::component::{Component, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};
 use wasmtime_wasi::WasiImpl;
-use wasmtime_wasi::{WasiCtx, WasiView};
+use wasmtime_wasi::{WasiCtx, WasiCtxBuilder, WasiView};
 
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
 // reference: https://docs.wasmtime.dev/examples-rust-wasi.html
@@ -25,7 +25,7 @@ impl WasiView for ComponentRunStates {
 impl ComponentRunStates {
     pub fn new() -> Self {
         ComponentRunStates {
-            wasi_ctx: wasmtime_wasi::WasiCtxBuilder::new().build(),
+            wasi_ctx: WasiCtxBuilder::new().build(),
             resource_table: ResourceTable::new(),
         }
     }
