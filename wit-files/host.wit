@@ -1,5 +1,5 @@
- package wasi-mindmap:host;
+package wasi-mindmap:host;
 
- world host {
-    import wasi-mindmap:interfaced-adder/add;
- }
+world host {
+   import wasi-mindmap:interfaced-adder/add;
+}
