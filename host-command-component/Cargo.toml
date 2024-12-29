@@ -26,6 +26,7 @@ package = "wasi-mindmap:host-command-component"
 
 # Step 2 in the reference
 [package.metadata.component.target]
+# use the WIT file in the `wit` directory to define the world of this command component
 path = "wit"
 
 # Step 3 in the reference
