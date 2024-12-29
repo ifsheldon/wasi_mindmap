@@ -6,7 +6,7 @@ from guest_adder_rs import Root
 
 def run_adder_rs_guest():
     store = Store()
-    component = Root(store)
-    result = component.add(store, 1, 2)
+    adder_component_instance = Root(store)
+    result = adder_component_instance.add(store, 1, 2)
     print(f"{__name__}: 1 + 2 = {result}")
     assert result == 3
