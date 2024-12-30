@@ -11,5 +11,3 @@ https://component-model.bytecodealliance.org/language-support/rust.html#importin
     * Alternatively, you can use WAC language and `wac` to programmatically compose components.
       See [compose with WAC](https://component-model.bytecodealliance.org/creating-and-consuming/composing.html#advanced-composition-with-the-wac-language).
 4. Run the host component with `wasmtime`: `wasmtime run <the-name-of-your-choice-when-downloading-the-component>.wasm`
-
-TODO: update screenshot
