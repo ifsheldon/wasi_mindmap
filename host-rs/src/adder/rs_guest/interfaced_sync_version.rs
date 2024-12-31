@@ -44,17 +44,17 @@ pub fn run_adder_dynamic(engine: &Engine) -> Result<()> {
     // * https://github.com/WebAssembly/wasi-cli/blob/main/wit/run.wit
     // * Documentation for [Func::typed](https://docs.rs/wasmtime/latest/wasmtime/component/struct.Func.html#method.typed) and [ComponentNamedList](https://docs.rs/wasmtime/latest/wasmtime/component/trait.ComponentNamedList.html)
 
-    // If you don't know the types of arguments and return values of the function
-    // iterate over the types of arguments
+    // If you don't know the types of arguments and return values of the function at compile time
+    // iterate over the types of arguments at run time
     for (i, p) in func.params(&store).iter().enumerate() {
         println!("Type of {}th param: {:?}", i, p);
     }
-    // iterate over the types of return values
+    // iterate over the types of return values at run time
     for (i, r) in func.results(&store).iter().enumerate() {
         println!("Type of {}th result: {:?}", i, r);
     }
 
-    // If you know the types of arguments and return values of the function
+    // If you know the types of arguments and return values of the function at compile time
     let typed_func = func.typed::<(i32, i32), (i32,)>(&store)?;
     let (result,) = typed_func.call(&mut store, (1, 2))?;
     // Required, see documentation of TypedFunc::call
