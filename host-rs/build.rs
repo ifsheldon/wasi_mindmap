@@ -34,10 +34,7 @@ fn main() {
             .status()
             .expect(format!("Failed to build crate {}", component_name).as_str());
 
-        if !status.success() {
-            panic!("Failed to build crate {}", component_name);
-        }
-
+        assert!(status.success(), "Failed to build crate {}", component_name);
         println!("Finished building {}", component_name);
     }
 
@@ -46,12 +43,11 @@ fn main() {
 
     for component_module_name in component_module_names {
         let artifact_path = target_dir.join("release").join(component_module_name);
-        if !artifact_path.exists() {
-            panic!(
-                "Required wasip2 module from guest-adder-rs not found at: {}",
-                artifact_path.display()
-            );
-        }
+        assert!(
+            artifact_path.exists(),
+            "Required wasip2 module from guest-adder-rs not found at: {}",
+            artifact_path.display()
+        );
         // Tell cargo to rerun if artifact changes
         println!("cargo:rerun-if-changed={}", artifact_path.display());
     }
@@ -62,12 +58,11 @@ fn main() {
         let component_path = workspace_dir
             .join("guest-adder-py")
             .join(py_component_module_name);
-        if !component_path.exists() {
-            panic!(
-                "Required wasip2 module from guest-adder-py not found at: {}",
-                component_path.display()
-            );
-        }
+        assert!(
+            component_path.exists(),
+            "Required wasip2 module from guest-adder-py not found at: {}",
+            component_path.display()
+        );
     }
 
     // Tell cargo to rerun if the sources change
