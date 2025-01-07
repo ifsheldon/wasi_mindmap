@@ -26,9 +26,9 @@ guide - [A Complete Guide to WASIp2 for Rust and Python Programmers](https://ide
     * [Bindgen improvement: Remove the use of async_trait](https://github.com/bytecodealliance/wasmtime/issues/9823)
     * [Documentation: Wrong doc about Config::wasm_component_model](https://github.com/bytecodealliance/wasmtime/issues/9694)
     * [Renovate host example with latest wasmtime and wasmtime_wasi](https://github.com/bytecodealliance/component-docs/issues/179)
+    * [Renovate the WASI example](https://github.com/bytecodealliance/wasmtime/issues/9777)
 * Unresolved ones, for those who may be interested in contributing:
     * [Compiled wasm32-wasip2 component from simple code requires excessive WASI interfaces](https://github.com/rust-lang/rust/issues/133235)
-    * [Renovate the WASI example](https://github.com/bytecodealliance/wasmtime/issues/9777)
     * [Bindgen! gives weird name to an interface well-named in WIT file](https://github.com/bytecodealliance/wasmtime/issues/9774)
 * TODO: Add an improvement issue regarding `Func::post_return`, probably can
   use [Undroppable Types](https://jack.wrenn.fyi/blog/undroppable/)
