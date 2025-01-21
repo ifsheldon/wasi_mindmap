@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0"
-wasmtime = "28.0"
-wasmtime-wasi = "28.0"
+wasmtime = "29.0"
+wasmtime-wasi = "29.0"
 futures = { version = "0.3", features = ["executor"] }
 clap = { version = "4.0", features = ["derive"] }
-async-trait = "0.1" # TODO: remove this when wasmtime 29.0 is released
+#async-trait = "0.1" # before wasmtime 29.0, this is needed

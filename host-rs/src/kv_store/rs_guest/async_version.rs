@@ -1,6 +1,6 @@
 // Reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_4_imported_resources/index.html
 
-use async_trait::async_trait;
+// use async_trait::async_trait; // before wasmtime 29.0, this is needed
 use futures::executor::block_on;
 
 use crate::utils::get_component_linker_store;
@@ -26,7 +26,7 @@ pub struct Connection {
     pub storage: HashMap<String, String>,
 }
 
-#[async_trait]
+// #[async_trait] // before wasmtime 29.0, this is needed
 impl KvDatabaseImports for ComponentRunStates {
     async fn log(&mut self, msg: String) -> Result<(), wasmtime::Error> {
         println!("Log: {}", msg);
@@ -36,7 +36,7 @@ impl KvDatabaseImports for ComponentRunStates {
 
 impl wasi_mindmap::kv_store::kvdb::Host for ComponentRunStates {}
 
-#[async_trait]
+// #[async_trait] // before wasmtime 29.0, this is needed
 impl wasi_mindmap::kv_store::kvdb::HostConnection for ComponentRunStates {
     async fn new(&mut self) -> Result<Resource<Connection>, wasmtime::Error> {
         Ok(self.resource_table.push(Connection {
