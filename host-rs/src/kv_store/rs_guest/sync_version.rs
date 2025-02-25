@@ -1,10 +1,10 @@
 // Reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_4_imported_resources/index.html
 
 use crate::utils::get_component_linker_store;
-use crate::utils::{bind_interfaces_needed_by_guest_rust_std, ComponentRunStates};
+use crate::utils::{ComponentRunStates, bind_interfaces_needed_by_guest_rust_std};
 use std::collections::HashMap;
-use wasmtime::component::bindgen;
 use wasmtime::component::Resource;
+use wasmtime::component::bindgen;
 use wasmtime::{Engine, Result};
 
 bindgen!({
