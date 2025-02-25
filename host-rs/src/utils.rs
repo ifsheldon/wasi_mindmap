@@ -1,7 +1,7 @@
 use anyhow::Context;
 use wasmtime::component::{Component, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};
-use wasmtime_wasi::WasiImpl;
+use wasmtime_wasi::{IoImpl, IoView, WasiImpl};
 use wasmtime_wasi::{WasiCtx, WasiCtxBuilder, WasiView};
 
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
@@ -13,10 +13,13 @@ pub(crate) struct ComponentRunStates {
     pub resource_table: ResourceTable,
 }
 
-impl WasiView for ComponentRunStates {
+impl IoView for ComponentRunStates {
     fn table(&mut self) -> &mut ResourceTable {
         &mut self.resource_table
     }
+}
+
+impl WasiView for ComponentRunStates {
     fn ctx(&mut self) -> &mut WasiCtx {
         &mut self.wasi_ctx
     }
@@ -29,6 +32,14 @@ impl ComponentRunStates {
             resource_table: ResourceTable::new(),
         }
     }
+}
+
+/// Copied from [wasmtime_wasi::io_type_annotate]
+pub fn io_type_annotate<T: IoView, F>(val: F) -> F
+where
+    F: Fn(&mut T) -> IoImpl<&mut T>,
+{
+    val
 }
 
 /// Copied from [wasmtime_wasi::type_annotate]
@@ -46,12 +57,13 @@ where
 ///
 ///
 pub fn bind_interfaces_needed_by_guest_rust_std<T: WasiView>(l: &mut Linker<T>) {
-    let closure = type_annotate::<T, _>(|t| WasiImpl(t));
+    let io_closure = io_type_annotate::<T, _>(|t| IoImpl(t));
+    wasmtime_wasi::bindings::io::error::add_to_linker_get_host(l, io_closure).unwrap();
+    wasmtime_wasi::bindings::sync::io::streams::add_to_linker_get_host(l, io_closure).unwrap();
+    let closure = type_annotate::<T, _>(|t| WasiImpl(IoImpl(t)));
     let options = wasmtime_wasi::bindings::sync::LinkOptions::default();
     wasmtime_wasi::bindings::sync::filesystem::types::add_to_linker_get_host(l, closure).unwrap();
     wasmtime_wasi::bindings::filesystem::preopens::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::bindings::io::error::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::bindings::sync::io::streams::add_to_linker_get_host(l, closure).unwrap();
     wasmtime_wasi::bindings::cli::exit::add_to_linker_get_host(l, &options.into(), closure)
         .unwrap();
     wasmtime_wasi::bindings::cli::environment::add_to_linker_get_host(l, closure).unwrap();
