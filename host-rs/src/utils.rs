@@ -8,7 +8,7 @@ use wasmtime_wasi::{WasiCtx, WasiCtxBuilder, WasiView};
 // reference: https://docs.wasmtime.dev/examples-rust-wasi.html
 
 pub(crate) struct ComponentRunStates {
-    // These two are required basically as a standard way to enable the impl of WasiView
+    // These two are required basically as a standard way to enable the impl of WasiView and IoView
     pub wasi_ctx: WasiCtx,
     pub resource_table: ResourceTable,
 }
