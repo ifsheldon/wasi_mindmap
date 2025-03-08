@@ -6,7 +6,7 @@ version = "0.1.1"
 edition = "2024"
 
 [dependencies]
-wit-bindgen-rt = { version = "0.39.0", features = ["bitflags"] }
+wit-bindgen-rt = { version = "0.41.0", features = ["bitflags"] }
 
 [profile.release]
 codegen-units = 1
