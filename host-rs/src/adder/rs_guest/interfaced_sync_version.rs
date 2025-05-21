@@ -34,12 +34,12 @@ pub fn run_adder_dynamic(engine: &Engine) -> Result<()> {
     let interface_idx = instance
         .get_export(&mut store, None, interface_name)
         .unwrap();
-    let parent_export_idx = Some(&interface_idx);
+    let parent_export_idx = Some(&interface_idx.1);
     let func_name = "add";
     let func_idx = instance
         .get_export(&mut store, parent_export_idx, func_name)
         .unwrap();
-    let func = instance.get_func(&mut store, func_idx).unwrap();
+    let func = instance.get_func(&mut store, func_idx.1).unwrap();
     // Reference:
     // * https://github.com/WebAssembly/wasi-cli/blob/main/wit/run.wit
     // * Documentation for [Func::typed](https://docs.rs/wasmtime/latest/wasmtime/component/struct.Func.html#method.typed) and [ComponentNamedList](https://docs.rs/wasmtime/latest/wasmtime/component/trait.ComponentNamedList.html)

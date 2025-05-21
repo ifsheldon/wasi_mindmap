@@ -1,7 +1,7 @@
 use crate::utils::get_component_linker_store;
 use wasmtime::component::bindgen;
 use wasmtime::{Engine, Result};
-use wasmtime_wasi::add_to_linker_sync;
+use wasmtime_wasi::p2::add_to_linker_sync;
 
 bindgen!({
     path: "../wit-files/adder.wit",

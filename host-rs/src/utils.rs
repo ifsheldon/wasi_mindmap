@@ -1,8 +1,8 @@
 use anyhow::Context;
 use wasmtime::component::{Component, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};
-use wasmtime_wasi::{IoImpl, IoView, WasiImpl};
-use wasmtime_wasi::{WasiCtx, WasiCtxBuilder, WasiView};
+use wasmtime_wasi::p2::{IoImpl, IoView, WasiImpl};
+use wasmtime_wasi::p2::{WasiCtx, WasiCtxBuilder, WasiView};
 
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
 // reference: https://docs.wasmtime.dev/examples-rust-wasi.html
@@ -58,18 +58,18 @@ where
 ///
 pub fn bind_interfaces_needed_by_guest_rust_std<T: WasiView>(l: &mut Linker<T>) {
     let io_closure = io_type_annotate::<T, _>(|t| IoImpl(t));
-    wasmtime_wasi::bindings::io::error::add_to_linker_get_host(l, io_closure).unwrap();
-    wasmtime_wasi::bindings::sync::io::streams::add_to_linker_get_host(l, io_closure).unwrap();
+    wasmtime_wasi::p2::bindings::io::error::add_to_linker_get_host(l, io_closure).unwrap();
+    wasmtime_wasi::p2::bindings::sync::io::streams::add_to_linker_get_host(l, io_closure).unwrap();
     let closure = type_annotate::<T, _>(|t| WasiImpl(IoImpl(t)));
-    let options = wasmtime_wasi::bindings::sync::LinkOptions::default();
-    wasmtime_wasi::bindings::sync::filesystem::types::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::bindings::filesystem::preopens::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::bindings::cli::exit::add_to_linker_get_host(l, &options.into(), closure)
+    let options = wasmtime_wasi::p2::bindings::sync::LinkOptions::default();
+    wasmtime_wasi::p2::bindings::sync::filesystem::types::add_to_linker_get_host(l, closure).unwrap();
+    wasmtime_wasi::p2::bindings::filesystem::preopens::add_to_linker_get_host(l, closure).unwrap();
+    wasmtime_wasi::p2::bindings::cli::exit::add_to_linker_get_host(l, &options.into(), closure)
         .unwrap();
-    wasmtime_wasi::bindings::cli::environment::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::bindings::cli::stdin::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::bindings::cli::stdout::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::bindings::cli::stderr::add_to_linker_get_host(l, closure).unwrap();
+    wasmtime_wasi::p2::bindings::cli::environment::add_to_linker_get_host(l, closure).unwrap();
+    wasmtime_wasi::p2::bindings::cli::stdin::add_to_linker_get_host(l, closure).unwrap();
+    wasmtime_wasi::p2::bindings::cli::stdout::add_to_linker_get_host(l, closure).unwrap();
+    wasmtime_wasi::p2::bindings::cli::stderr::add_to_linker_get_host(l, closure).unwrap();
 }
 
 pub fn get_component_linker_store(

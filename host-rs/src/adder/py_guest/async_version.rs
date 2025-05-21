@@ -2,7 +2,7 @@ use crate::utils::get_component_linker_store;
 use futures::executor::block_on;
 use wasmtime::component::bindgen;
 use wasmtime::{Engine, Result};
-use wasmtime_wasi::add_to_linker_async;
+use wasmtime_wasi::p2::add_to_linker_async;
 
 bindgen!({
     path: "../wit-files/adder.wit",

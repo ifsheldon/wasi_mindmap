@@ -2,11 +2,11 @@
 
 [package]
 name = "host-command-component"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
-wit-bindgen-rt = { version = "0.41.0", features = ["bitflags"] }
+wit-bindgen-rt = { version = "0.42.0", features = ["bitflags"] }
 
 [profile.release]
 codegen-units = 1
