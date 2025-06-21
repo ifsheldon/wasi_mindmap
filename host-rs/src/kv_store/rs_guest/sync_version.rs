@@ -3,8 +3,8 @@
 use crate::utils::get_component_linker_store;
 use crate::utils::{ComponentRunStates, bind_interfaces_needed_by_guest_rust_std};
 use std::collections::HashMap;
-use wasmtime::component::Resource;
 use wasmtime::component::bindgen;
+use wasmtime::component::{HasSelf, Resource};
 use wasmtime::{Engine, Result};
 
 bindgen!({
@@ -76,7 +76,7 @@ pub fn run_kv_store_sync(engine: &Engine) -> Result<()> {
         "./target/wasm32-wasip2/release/guest_kv_store_rs.wasm",
         "../target/wasm32-wasip2/release/guest_kv_store_rs.wasm",
     )?;
-    KvDatabase::add_to_linker(&mut linker, |s| s)?;
+    KvDatabase::add_to_linker::<_, HasSelf<_>>(&mut linker, |s| s)?;
     bind_interfaces_needed_by_guest_rust_std(&mut linker);
     let bindings = KvDatabase::instantiate(&mut store, &component, &linker)?;
     let result = bindings.call_replace_value(store, "hello", "world")?;

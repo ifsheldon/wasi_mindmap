@@ -1,11 +1,12 @@
 use anyhow::Context;
-use wasmtime::component::{Component, Linker, ResourceTable};
+use wasmtime::component::{Component, HasData, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};
 use wasmtime_wasi::p2::{IoImpl, IoView, WasiImpl};
 use wasmtime_wasi::p2::{WasiCtx, WasiCtxBuilder, WasiView};
 
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
 // reference: https://docs.wasmtime.dev/examples-rust-wasi.html
+// reference: https://docs.rs/wasmtime/latest/wasmtime/component/trait.HasData.html
 
 pub(crate) struct ComponentRunStates {
     // These two are required basically as a standard way to enable the impl of WasiView and IoView
@@ -34,42 +35,42 @@ impl ComponentRunStates {
     }
 }
 
-/// Copied from [wasmtime_wasi::io_type_annotate]
-pub fn io_type_annotate<T: IoView, F>(val: F) -> F
-where
-    F: Fn(&mut T) -> IoImpl<&mut T>,
-{
-    val
+/// Copied from [`wasmtime_wasi::p2::HasIo`]
+struct HasIo<T>(T);
+
+impl<T: 'static> HasData for HasIo<T> {
+    type Data<'a> = IoImpl<&'a mut T>;
 }
 
-/// Copied from [wasmtime_wasi::type_annotate]
-pub fn type_annotate<T: WasiView, F>(val: F) -> F
-where
-    F: Fn(&mut T) -> WasiImpl<&mut T>,
-{
-    val
+/// Copied from [`wasmtime_wasi::p2::HasWasi`]
+struct HasWasi<T>(T);
+
+impl<T: 'static> HasData for HasWasi<T> {
+    type Data<'a> = WasiImpl<&'a mut T>;
 }
 
 ///
 /// Bind WASI interfaces necessary for rust std in guest to run.
 ///
-/// A pruned version of [`wasmtime_wasi::add_to_linker_sync`] and [`wasmtime_wasi::add_to_linker_with_options_sync`]
+/// A pruned version of [`wasmtime_wasi::p2::add_to_linker_sync`] and [`wasmtime_wasi::p2::add_to_linker_with_options_sync`]
 ///
 ///
-pub fn bind_interfaces_needed_by_guest_rust_std<T: WasiView>(l: &mut Linker<T>) {
-    let io_closure = io_type_annotate::<T, _>(|t| IoImpl(t));
-    wasmtime_wasi::p2::bindings::io::error::add_to_linker_get_host(l, io_closure).unwrap();
-    wasmtime_wasi::p2::bindings::sync::io::streams::add_to_linker_get_host(l, io_closure).unwrap();
-    let closure = type_annotate::<T, _>(|t| WasiImpl(IoImpl(t)));
+pub fn bind_interfaces_needed_by_guest_rust_std<T: WasiView + 'static>(l: &mut Linker<T>) {
+    let f: fn(&mut T) -> IoImpl<&mut T> = |t| IoImpl(t);
+    wasmtime_wasi::p2::bindings::io::error::add_to_linker::<T, HasIo<T>>(l, f).unwrap();
+    wasmtime_wasi::p2::bindings::sync::io::streams::add_to_linker::<T, HasIo<T>>(l, f).unwrap();
+    let f: fn(&mut T) -> WasiImpl<&mut T> = |t| WasiImpl(IoImpl(t));
     let options = wasmtime_wasi::p2::bindings::sync::LinkOptions::default();
-    wasmtime_wasi::p2::bindings::sync::filesystem::types::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::p2::bindings::filesystem::preopens::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::p2::bindings::cli::exit::add_to_linker_get_host(l, &options.into(), closure)
+    wasmtime_wasi::p2::bindings::sync::filesystem::types::add_to_linker::<T, HasWasi<T>>(l, f)
         .unwrap();
-    wasmtime_wasi::p2::bindings::cli::environment::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::p2::bindings::cli::stdin::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::p2::bindings::cli::stdout::add_to_linker_get_host(l, closure).unwrap();
-    wasmtime_wasi::p2::bindings::cli::stderr::add_to_linker_get_host(l, closure).unwrap();
+    wasmtime_wasi::p2::bindings::filesystem::preopens::add_to_linker::<T, HasWasi<T>>(l, f)
+        .unwrap();
+    wasmtime_wasi::p2::bindings::cli::exit::add_to_linker::<T, HasWasi<T>>(l, &options.into(), f)
+        .unwrap();
+    wasmtime_wasi::p2::bindings::cli::environment::add_to_linker::<T, HasWasi<T>>(l, f).unwrap();
+    wasmtime_wasi::p2::bindings::cli::stdin::add_to_linker::<T, HasWasi<T>>(l, f).unwrap();
+    wasmtime_wasi::p2::bindings::cli::stdout::add_to_linker::<T, HasWasi<T>>(l, f).unwrap();
+    wasmtime_wasi::p2::bindings::cli::stderr::add_to_linker::<T, HasWasi<T>>(l, f).unwrap();
 }
 
 pub fn get_component_linker_store(
