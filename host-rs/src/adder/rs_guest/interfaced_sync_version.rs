@@ -47,11 +47,11 @@ pub fn run_adder_dynamic(engine: &Engine) -> Result<()> {
     // If you don't know the types of arguments and return values of the function at compile time
     // iterate over the types of arguments at run time
     for (i, p) in func.params(&store).iter().enumerate() {
-        println!("Type of {}th param: {:?}", i, p);
+        println!("Type of {i}th param: {p:?}");
     }
     // iterate over the types of return values at run time
     for (i, r) in func.results(&store).iter().enumerate() {
-        println!("Type of {}th result: {:?}", i, r);
+        println!("Type of {i}th result: {r:?}");
     }
 
     // If you know the types of arguments and return values of the function at compile time

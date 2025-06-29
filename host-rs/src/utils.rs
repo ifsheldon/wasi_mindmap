@@ -83,10 +83,10 @@ pub fn get_component_linker_store(
     Store<ComponentRunStates>,
 )> {
     let component = Component::from_file(engine, path)
-        .or_else(|_| Component::from_file(&engine, alt_path))
+        .or_else(|_| Component::from_file(engine, alt_path))
         .with_context(|| format!("Cannot find component from path: {path} or {alt_path}"))?;
-    let linker = Linker::new(&engine);
+    let linker = Linker::new(engine);
     let state = ComponentRunStates::new();
-    let store = Store::new(&engine, state);
+    let store = Store::new(engine, state);
     Ok((component, linker, store))
 }

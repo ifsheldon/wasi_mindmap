@@ -7,7 +7,7 @@ struct KVStore;
 use crate::wasi_mindmap::kv_store::kvdb::Connection;
 use std::sync::LazyLock;
 
-static KV_CONNECTION: LazyLock<Connection> = LazyLock::new(|| Connection::new());
+static KV_CONNECTION: LazyLock<Connection> = LazyLock::new(Connection::new);
 
 impl Guest for KVStore {
     fn replace_value(key: String, value: String) -> Option<String> {

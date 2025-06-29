@@ -32,10 +32,10 @@ fn main() {
                 "wasm32-wasip2",
             ])
             .status()
-            .expect(format!("Failed to build crate {}", component_name).as_str());
+            .unwrap_or_else(|_| panic!("Failed to build crate {component_name}"));
 
-        assert!(status.success(), "Failed to build crate {}", component_name);
-        println!("Finished building {}", component_name);
+        assert!(status.success(), "Failed to build crate {component_name}");
+        println!("Finished building {component_name}");
     }
 
     // Check if the artifacts (i.e., wasip2 modules) exist
