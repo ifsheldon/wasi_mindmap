@@ -1,12 +1,12 @@
 [package]
 name = "host-rs"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2024"
 
 [dependencies]
 anyhow = "1.0"
-wasmtime = "34.0"
-wasmtime-wasi = "34.0"
+wasmtime = "35.0"
+wasmtime-wasi = "35.0"
 futures = { version = "0.3", features = ["executor"] }
 clap = { version = "4.0", features = ["derive"] }
 #async-trait = "0.1" # before wasmtime 29.0, this is needed
