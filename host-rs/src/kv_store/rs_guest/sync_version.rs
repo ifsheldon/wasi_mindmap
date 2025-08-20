@@ -10,12 +10,12 @@ use wasmtime::{Engine, Result};
 bindgen!({
     path: "../wit-files/kv-store.wit",
     world: "kv-database",
+    // Interactions with `ResourceTable` can possibly trap so enable the ability
+    // to return traps from generated functions.
+    imports: { default: trappable },
     with: {
         "wasi-mindmap:kv-store/kvdb/connection": Connection
     },
-    // Interactions with `ResourceTable` can possibly trap so enable the ability
-    // to return traps from generated functions.
-    trappable_imports: true,
 });
 
 pub struct Connection {
@@ -77,7 +77,7 @@ pub fn run_kv_store_sync(engine: &Engine) -> Result<()> {
         "../target/wasm32-wasip2/release/guest_kv_store_rs.wasm",
     )?;
     KvDatabase::add_to_linker::<_, HasSelf<_>>(&mut linker, |s| s)?;
-    bind_interfaces_needed_by_guest_rust_std(&mut linker);
+    bind_interfaces_needed_by_guest_rust_std(&mut linker, false);
     let bindings = KvDatabase::instantiate(&mut store, &component, &linker)?;
     let result = bindings.call_replace_value(store, "hello", "world")?;
     assert_eq!(result, None);

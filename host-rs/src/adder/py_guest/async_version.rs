@@ -7,7 +7,8 @@ use wasmtime_wasi::p2::add_to_linker_async;
 bindgen!({
     path: "../wit-files/adder.wit",
     world: "adder",
-    async: true
+    imports: { default: async | trappable },
+    exports: { default: async },
 });
 
 pub fn run_adder_async(engine: &Engine) -> Result<()> {

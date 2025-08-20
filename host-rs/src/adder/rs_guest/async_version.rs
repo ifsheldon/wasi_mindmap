@@ -6,7 +6,8 @@ use wasmtime::{Engine, Result};
 bindgen!({
     path: "../wit-files/adder.wit",
     world: "adder",
-    async: true
+    imports: { default: async | trappable },
+    exports: { default: async },
 });
 
 pub fn run_adder_async(engine: &Engine) -> Result<()> {

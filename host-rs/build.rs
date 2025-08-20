@@ -19,7 +19,7 @@ fn main() {
         "guest_kv_store_rs.wasm",
     ];
 
-    // First, build components explicitly
+    println!("cargo:warning=Running Step 1: Build required components explicitly");
     for component_name in component_names {
         let status = Command::new("cargo")
             .current_dir(&workspace_dir)
@@ -38,7 +38,9 @@ fn main() {
         println!("Finished building {component_name}");
     }
 
-    // Check if the artifacts (i.e., wasip2 modules) exist
+    println!(
+        "cargo:warning=Running Step 2: Check if required artifacts (i.e., wasip2 modules) from Rust code exist"
+    );
     let target_dir = workspace_dir.join("target").join("wasm32-wasip2");
 
     for component_module_name in component_module_names {
@@ -53,7 +55,9 @@ fn main() {
     }
 
     let py_component_module_names = ["guest_adder_py.wasm", "guest_interfaced_adder_py.wasm"];
-
+    println!(
+        "cargo:warning=Running Step 2: Check if required artifacts (i.e., wasip2 modules) from Python code exist"
+    );
     for py_component_module_name in py_component_module_names {
         let component_path = workspace_dir
             .join("guest-adder-py")
@@ -72,4 +76,5 @@ fn main() {
             workspace_dir.join(component_name).join("src").display()
         );
     }
+    println!("cargo:warning=Finished prebuild checks for required components");
 }
