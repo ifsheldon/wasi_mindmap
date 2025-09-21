@@ -2,6 +2,8 @@ use anyhow::Context;
 use wasmtime::component::HasData;
 use wasmtime::component::{Component, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};
+use wasmtime_wasi::cli::{WasiCli, WasiCliView};
+use wasmtime_wasi::filesystem::{WasiFilesystem, WasiFilesystemView};
 use wasmtime_wasi::p2::bindings;
 use wasmtime_wasi::{WasiCtx, WasiCtxBuilder, WasiCtxView, WasiView};
 // reference: https://docs.rs/wasmtime/latest/wasmtime/component/bindgen_examples/_0_hello_world/index.html
@@ -39,13 +41,6 @@ impl HasData for HasIo {
     type Data<'a> = &'a mut ResourceTable;
 }
 
-/// Copied from [`wasmtime_wasi::p2::HasWasi`]
-struct HasWasi;
-
-impl HasData for HasWasi {
-    type Data<'a> = WasiCtxView<'a>;
-}
-
 fn add_sync_io_to_linker<T: WasiView>(l: &mut Linker<T>) {
     wasmtime_wasi_io::bindings::wasi::io::error::add_to_linker::<T, HasIo>(l, |t| t.ctx().table)
         .unwrap();
@@ -63,12 +58,12 @@ fn add_nonblocking_to_linker<'a, T: WasiView, O>(l: &mut Linker<T>, options: &'a
 where
     bindings::cli::exit::LinkOptions: From<&'a O>,
 {
-    bindings::filesystem::preopens::add_to_linker::<T, HasWasi>(l, T::ctx).unwrap();
-    bindings::cli::exit::add_to_linker::<T, HasWasi>(l, &options.into(), T::ctx).unwrap();
-    bindings::cli::environment::add_to_linker::<T, HasWasi>(l, T::ctx).unwrap();
-    bindings::cli::stdin::add_to_linker::<T, HasWasi>(l, T::ctx).unwrap();
-    bindings::cli::stdout::add_to_linker::<T, HasWasi>(l, T::ctx).unwrap();
-    bindings::cli::stderr::add_to_linker::<T, HasWasi>(l, T::ctx).unwrap();
+    bindings::filesystem::preopens::add_to_linker::<T, WasiFilesystem>(l, T::filesystem).unwrap();
+    bindings::cli::exit::add_to_linker::<T, WasiCli>(l, &options.into(), T::cli).unwrap();
+    bindings::cli::environment::add_to_linker::<T, WasiCli>(l, T::cli).unwrap();
+    bindings::cli::stdin::add_to_linker::<T, WasiCli>(l, T::cli).unwrap();
+    bindings::cli::stdout::add_to_linker::<T, WasiCli>(l, T::cli).unwrap();
+    bindings::cli::stderr::add_to_linker::<T, WasiCli>(l, T::cli).unwrap();
 }
 
 ///
@@ -82,12 +77,13 @@ pub fn bind_interfaces_needed_by_guest_rust_std<T: WasiView>(l: &mut Linker<T>, 
         let options = bindings::LinkOptions::default();
         add_async_io_to_linker(l);
         add_nonblocking_to_linker(l, &options);
-        bindings::filesystem::types::add_to_linker::<T, HasWasi>(l, T::ctx).unwrap();
+        bindings::filesystem::types::add_to_linker::<T, WasiFilesystem>(l, T::filesystem).unwrap();
     } else {
         let options = bindings::sync::LinkOptions::default();
         add_sync_io_to_linker(l);
         add_nonblocking_to_linker(l, &options);
-        bindings::sync::filesystem::types::add_to_linker::<T, HasWasi>(l, T::ctx).unwrap();
+        bindings::sync::filesystem::types::add_to_linker::<T, WasiFilesystem>(l, T::filesystem)
+            .unwrap();
     }
 }
 
