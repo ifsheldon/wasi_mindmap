@@ -72,6 +72,7 @@ where
 /// A pruned version of [`wasmtime_wasi::p2::add_to_linker_sync`],
 /// [`wasmtime_wasi::p2::add_to_linker_async`], [`wasmtime_wasi::p2::add_to_linker_with_options_sync`] and [`wasmtime_wasi::p2::add_to_linker_with_options_async`]
 ///
+/// For normal users, you can just use one of the above functions directly.
 pub fn bind_interfaces_needed_by_guest_rust_std<T: WasiView>(l: &mut Linker<T>, r#async: bool) {
     if r#async {
         let options = bindings::LinkOptions::default();
