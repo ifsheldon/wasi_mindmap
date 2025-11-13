@@ -1,9 +1,17 @@
-1. Install tools: `pip install -r requirements.txt`
-2. Make sure you have built `guest_adder_rs.wasm` and `guest_interfaced_adder_rs.wasm`. If not,
-   `cd ../guest-adder-rs && cargo build --release --target wasm32-wasip2` and `cd ../guest-interfaced-adder-rs && cargo build --release --target wasm32-wasip2`
+1. Install tools: `uv sync`
+2. Make sure you have built `guest_adder_rs.wasm` and `guest_interfaced_adder_rs.wasm`. If not, run
+   ```
+   uv run poe build-adder-rs 
+   uv run poe build-interfaced-adder-rs
+   ```
 3. Make bindings for `guest_adder_rs.wasm` and `guest_interfaced_adder_rs.wasm`:
-   `python -m wasmtime.bindgen guest_adder_rs.wasm --out-dir adder_rs_bindings && python -m wasmtime.bindgen guest_interfaced_adder_rs.wasm --out-dir interfaced_adder_rs_bindings`
-4. Run the host: `python host.py`
+   ```
+   uv run poe bind-adder-rs
+   uv run poe bind-interfaced-adder-rs
+   ```
+4. Run the host: `uv run python host.py`
+
+> To see the details of the commands, see the poe task definitions in [pyproject.toml](pyproject.toml).
 
 ## Limitations
 

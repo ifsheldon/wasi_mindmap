@@ -7,3 +7,25 @@ requires-python = ">=3.12"
 dependencies = [
     "wasmtime>=38.0.0",
 ]
+
+[tool.poe.tasks.build-adder-rs]
+cwd = "../guest-adder-rs"
+cmd = "cargo build --release --target wasm32-wasip2"
+
+[tool.poe.tasks.build-interfaced-adder-rs]
+cwd = "../guest-interfaced-adder-rs"
+cmd = "cargo build --release --target wasm32-wasip2"
+
+[tool.poe.tasks.bind-adder-rs]
+sequence = [
+    { cmd = "rm -r adder_rs_bindings" },
+    { cmd = "uv run python -m wasmtime.bindgen guest_adder_rs.wasm --out-dir adder_rs_bindings"},
+    { cmd = "echo binding adder component completed" },
+]
+
+[tool.poe.tasks.bind-interfaced-adder-rs]
+sequence = [
+    { cmd = "rm -r interfaced_adder_rs_bindings" },
+    { cmd = "uv run python -m wasmtime.bindgen guest_interfaced_adder_rs.wasm --out-dir interfaced_adder_rs_bindings"},
+    { cmd = "echo binding interfaced adder component completed" },
+]
