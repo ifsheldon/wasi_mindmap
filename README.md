@@ -15,7 +15,7 @@ guide - [A Complete Guide to WASIp2 for Rust and Python Programmers](https://ide
 
 ✅: Currently supported
 
-🛠️: Not supported for now, under development of `wasmtime-py`
+🛠️: Not supported for now, under development of `wasmtime-py`, see the [issue](https://github.com/bytecodealliance/wasmtime-py/issues/309).
 
 📌: TODO and welcome contributions
 
