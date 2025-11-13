@@ -1,0 +1,12 @@
+[project]
+name = "guest-adder-py"
+version = "0.1.0"
+description = "An adder component written in Python"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "componentize-py>=0.19.2",
+]

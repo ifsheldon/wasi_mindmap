@@ -1,0 +1,23 @@
+[project]
+name = "wasi-mindmap"
+version = "0.1.0"
+description = "A collection of examples and tutorials about WASIp2."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["poethepoet>=0.37.0", "ruff>=0.14.4"]
+
+[tool.uv.workspace]
+members = ["host-py", "guest-adder-py"]
+
+[tool.ruff]
+extend-exclude = [
+    "guest-adder-rs",
+    "guest-interfaced-adder-rs",
+    "guest-kv-store-rs",
+    "host-command-component",
+    "host-rs",
+    "wit-files",
+]
