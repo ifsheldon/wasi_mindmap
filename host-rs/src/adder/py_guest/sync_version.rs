@@ -12,8 +12,8 @@ pub fn run_adder_sync(engine: &Engine) -> Result<()> {
     println!("Loading guest-adder-py, will take dozens of seconds");
     let (component, mut linker, mut store) = get_component_linker_store(
         engine,
-        "./guest-adder-py/guest_adder_py.wasm",
-        "../guest-adder-py/guest_adder_py.wasm",
+        "./guest-adder-py/adder/guest_adder_py.wasm",
+        "../guest-adder-py/adder/guest_adder_py.wasm",
     )?;
     add_to_linker_sync(&mut linker)?;
     let bindings = Adder::instantiate(&mut store, &component, &linker)?;

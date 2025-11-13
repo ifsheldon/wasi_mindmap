@@ -7,6 +7,38 @@ requires-python = ">=3.12"
 dependencies = []
 
 [dependency-groups]
-dev = [
-    "componentize-py>=0.19.2",
+dev = ["componentize-py>=0.19.2"]
+
+
+[tool.poe.tasks.bind-adder]
+sequence = [
+    { cmd = "rm -r adder" },
+    { cmd = "uv run componentize-py --wit-path ../wit-files/adder.wit --world adder bindings ./adder" },
+    { cmd = "echo binding adder component completed" },
 ]
+cwd = "."
+
+[tool.poe.tasks.componentize-adder]
+sequence = [
+    { cmd = "cp ../guest-adder.py ." },
+    { cmd = "uv run componentize-py --wit-path ../../wit-files/adder.wit --world adder componentize guest-adder -o guest_adder_py.wasm" },
+    { cmd = "echo componentizing adder component completed" },
+]
+cwd = "./adder"
+
+
+[tool.poe.tasks.bind-interfaced-adder]
+sequence = [
+    { cmd = "rm -r interfaced_adder" },
+    { cmd = "uv run componentize-py --wit-path ../wit-files/interfaced-adder.wit --world adder bindings ./interfaced_adder" },
+    { cmd = "echo binding interfaced adder component completed" },
+]
+cwd = "."
+
+[tool.poe.tasks.componentize-interfaced-adder]
+sequence = [
+    { cmd = "cp ../guest-interfaced-adder.py ." },
+    { cmd = "uv run componentize-py --wit-path ../../wit-files/interfaced-adder.wit --world adder componentize guest-interfaced-adder -o guest_interfaced_adder_py.wasm" },
+    { cmd = "echo componentizing interfaced adder component completed" },
+]
+cwd = "./interfaced_adder"

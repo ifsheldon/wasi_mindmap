@@ -15,8 +15,8 @@ pub fn run_adder_async(engine: &Engine) -> Result<()> {
     println!("Loading guest-adder-py, will take dozens of seconds");
     let (component, mut linker, mut store) = get_component_linker_store(
         engine,
-        "./guest-adder-py/guest_adder_py.wasm",
-        "../guest-adder-py/guest_adder_py.wasm",
+        "./guest-adder-py/adder/guest_adder_py.wasm",
+        "../guest-adder-py/adder/guest_adder_py.wasm",
     )?;
     add_to_linker_async(&mut linker)?;
     let async_future = async {

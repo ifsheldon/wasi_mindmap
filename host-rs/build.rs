@@ -54,14 +54,15 @@ fn main() {
         println!("cargo:rerun-if-changed={}", artifact_path.display());
     }
 
-    let py_component_module_names = ["guest_adder_py.wasm", "guest_interfaced_adder_py.wasm"];
+    let py_component_module_paths = [
+        "guest-adder-py/adder/guest_adder_py.wasm",
+        "guest-adder-py/interfaced_adder/guest_interfaced_adder_py.wasm",
+    ];
     println!(
         "cargo:warning=Running Step 3: Check if required artifacts (i.e., wasip2 modules) from Python code exist"
     );
-    for py_component_module_name in py_component_module_names {
-        let component_path = workspace_dir
-            .join("guest-adder-py")
-            .join(py_component_module_name);
+    for py_component_module_path in py_component_module_paths {
+        let component_path = workspace_dir.join(py_component_module_path);
         assert!(
             component_path.exists(),
             "Required wasip2 module from guest-adder-py not found at: {}",

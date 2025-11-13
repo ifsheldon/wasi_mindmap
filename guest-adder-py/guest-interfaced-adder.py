@@ -1,4 +1,5 @@
-from interfaced_adder import exports
+# wit_world is generated in ./interfaced_adder
+from wit_world import exports
 
 
 # the class MUST be named `Add`, same as the abstract class
