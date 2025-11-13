@@ -56,7 +56,7 @@ fn main() {
 
     let py_component_module_names = ["guest_adder_py.wasm", "guest_interfaced_adder_py.wasm"];
     println!(
-        "cargo:warning=Running Step 2: Check if required artifacts (i.e., wasip2 modules) from Python code exist"
+        "cargo:warning=Running Step 3: Check if required artifacts (i.e., wasip2 modules) from Python code exist"
     );
     for py_component_module_name in py_component_module_names {
         let component_path = workspace_dir
