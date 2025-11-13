@@ -9,9 +9,6 @@ from ..types import Result, Ok, Err, Some
 
 
 class Add(Protocol):
-
     @abstractmethod
     def add(self, a: int, b: int) -> int:
         raise NotImplementedError
-
-
