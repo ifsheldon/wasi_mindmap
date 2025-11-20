@@ -14,7 +14,7 @@ bindgen!({
     // to return traps from generated functions.
     imports: { default: trappable },
     with: {
-        "wasi-mindmap:kv-store/kvdb/connection": Connection
+        "wasi-mindmap:kv-store/kvdb.connection": Connection
     },
 });
 

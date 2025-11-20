@@ -42,15 +42,15 @@ pub fn run_adder_dynamic(engine: &Engine) -> Result<()> {
     let func = instance.get_func(&mut store, func_idx).unwrap();
     // Reference:
     // * https://github.com/WebAssembly/wasi-cli/blob/main/wit/run.wit
-    // * Documentation for [Func::typed](https://docs.rs/wasmtime/latest/wasmtime/component/struct.Func.html#method.typed) and [ComponentNamedList](https://docs.rs/wasmtime/latest/wasmtime/component/trait.ComponentNamedList.html)
-
+    // * Documentation for [Func::typed](https://docs.rs/wasmtime/latest/wasmtime/component/struct.Func.html) and [ComponentNamedList](https://docs.rs/wasmtime/latest/wasmtime/component/trait.ComponentNamedList.html)
+    let ty = func.ty(&store);
     // If you don't know the types of arguments and return values of the function at compile time
     // iterate over the types of arguments at run time
-    for (i, p) in func.params(&store).iter().enumerate() {
+    for (i, p) in ty.params().enumerate() {
         println!("Type of {i}th param: {p:?}");
     }
     // iterate over the types of return values at run time
-    for (i, r) in func.results(&store).iter().enumerate() {
+    for (i, r) in ty.results().enumerate() {
         println!("Type of {i}th result: {r:?}");
     }
 

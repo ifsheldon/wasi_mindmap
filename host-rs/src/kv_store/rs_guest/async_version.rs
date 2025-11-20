@@ -18,7 +18,7 @@ bindgen!({
     imports: { default: async | trappable },
     exports: { default: async },
     with: {
-        "wasi-mindmap:kv-store/kvdb/connection": Connection
+        "wasi-mindmap:kv-store/kvdb.connection": Connection
     },
 });
 
