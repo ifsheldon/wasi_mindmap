@@ -2,7 +2,7 @@ use crate::adder::*;
 use crate::kv_store::*;
 use clap::{Parser, ValueEnum};
 use wasmtime::Result;
-use wasmtime::{Config, Engine};
+use wasmtime::Engine;
 
 mod adder;
 mod kv_store;
@@ -30,9 +30,7 @@ fn main() -> Result<()> {
 
     // engines with/without async must be used separately for async and sync instantiation of components
     let engine_sync = Engine::default();
-    let mut config = Config::default();
-    config.async_support(true);
-    let engine_async = Engine::new(&config)?;
+    let engine_async = Engine::default();
 
     match cli.module.unwrap_or(Module::All) {
         Module::All => {

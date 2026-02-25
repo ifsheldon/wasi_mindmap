@@ -9,5 +9,5 @@ members = [
 ]
 
 [workspace.dependencies]
-wit-bindgen = "0.51.0"
+wit-bindgen = "0.53.0"
 wit-bindgen-rt = { version = "0.44.0" }

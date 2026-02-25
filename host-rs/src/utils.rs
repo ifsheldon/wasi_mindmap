@@ -1,4 +1,4 @@
-use anyhow::Context;
+use wasmtime::error::Context;
 use wasmtime::component::HasData;
 use wasmtime::component::{Component, Linker, ResourceTable};
 use wasmtime::{Engine, Result, Store};

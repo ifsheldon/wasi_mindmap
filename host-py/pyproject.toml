@@ -1,11 +1,11 @@
 [project]
 name = "host-py"
-version = "0.1.0"
+version = "0.1.1"
 description = "A Python host for WASIp2 components"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "wasmtime>=38.0.0",
+    "wasmtime==38.0.0",
 ]
 
 [tool.poe.tasks.build-adder-rs]

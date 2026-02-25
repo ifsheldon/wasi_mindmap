@@ -57,8 +57,6 @@ pub fn run_adder_dynamic(engine: &Engine) -> Result<()> {
     // If you know the types of arguments and return values of the function at compile time
     let typed_func = func.typed::<(i32, i32), (i32,)>(&store)?;
     let (result,) = typed_func.call(&mut store, (1, 2))?;
-    // Required, see documentation of TypedFunc::call
-    typed_func.post_return(&mut store)?;
     assert_eq!(result, 3);
     Ok(())
 }
