@@ -27,34 +27,31 @@ enum Module {
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
-
-    // engines with/without async must be used separately for async and sync instantiation of components
-    let engine_sync = Engine::default();
-    let engine_async = Engine::default();
+    let engine = Engine::default();
 
     match cli.module.unwrap_or(Module::All) {
         Module::All => {
-            run_adder_rs_sync(&engine_sync)?;
-            run_interfaced_adder_sync(&engine_sync)?;
-            run_adder_rs_async(&engine_async)?;
-            run_adder_py_sync(&engine_sync)?;
-            run_adder_py_async(&engine_async)?;
-            run_kv_store_rs_sync(&engine_sync)?;
-            run_kv_store_rs_async(&engine_async)?;
+            run_adder_rs_sync(&engine)?;
+            run_interfaced_adder_sync(&engine)?;
+            run_adder_rs_async(&engine)?;
+            run_adder_py_sync(&engine)?;
+            run_adder_py_async(&engine)?;
+            run_kv_store_rs_sync(&engine)?;
+            run_kv_store_rs_async(&engine)?;
         }
         Module::RustAdder => {
-            run_adder_rs_sync(&engine_sync)?;
-            run_interfaced_adder_sync(&engine_sync)?;
-            run_interfaced_adder_dynamic(&engine_sync)?;
-            run_adder_rs_async(&engine_async)?;
+            run_adder_rs_sync(&engine)?;
+            run_interfaced_adder_sync(&engine)?;
+            run_interfaced_adder_dynamic(&engine)?;
+            run_adder_rs_async(&engine)?;
         }
         Module::RustKVStore => {
-            run_kv_store_rs_sync(&engine_sync)?;
-            run_kv_store_rs_async(&engine_async)?;
+            run_kv_store_rs_sync(&engine)?;
+            run_kv_store_rs_async(&engine)?;
         }
         Module::PythonAdder => {
-            run_adder_py_sync(&engine_sync)?;
-            run_adder_py_async(&engine_async)?;
+            run_adder_py_sync(&engine)?;
+            run_adder_py_async(&engine)?;
         }
     }
 
