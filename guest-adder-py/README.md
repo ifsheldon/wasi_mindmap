@@ -2,6 +2,7 @@ Reference: https://component-model.bytecodealliance.org/language-support/python.
 
 Run these commands from the `guest-adder-py` directory.
 `uv sync` installs this example's development tools, including `poe` and `componentize-py`.
+Binding tasks work on the first run and replace any existing generated bindings on subsequent runs.
 
 1. Install tools: `uv sync`
 2. Generate bindings:

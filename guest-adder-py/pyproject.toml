@@ -12,7 +12,7 @@ dev = ["componentize-py>=0.19.2", "poethepoet>=0.37.0"]
 
 [tool.poe.tasks.bind-adder]
 sequence = [
-    { cmd = "rm -r adder" },
+    { shell = "if [ -e adder ] || [ -L adder ]; then rm -r adder; fi", interpreter = "posix" },
     { cmd = "uv run componentize-py --wit-path ../wit-files/adder.wit --world adder bindings ./adder" },
     { cmd = "echo binding adder component completed" },
 ]
@@ -29,7 +29,7 @@ cwd = "./adder"
 
 [tool.poe.tasks.bind-interfaced-adder]
 sequence = [
-    { cmd = "rm -r interfaced_adder" },
+    { shell = "if [ -e interfaced_adder ] || [ -L interfaced_adder ]; then rm -r interfaced_adder; fi", interpreter = "posix" },
     { cmd = "uv run componentize-py --wit-path ../wit-files/interfaced-adder.wit --world adder bindings ./interfaced_adder" },
     { cmd = "echo binding interfaced adder component completed" },
 ]
