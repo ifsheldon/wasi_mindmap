@@ -1,3 +1,6 @@
+Run these commands from the `host-py` directory.
+`uv sync` installs this example's dependencies and development tools, including `poe`.
+
 1. Install tools: `uv sync`
 2. Make sure you have built `guest_adder_rs.wasm` and `guest_interfaced_adder_rs.wasm`. If not, run
    ```

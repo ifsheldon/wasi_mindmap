@@ -30,23 +30,35 @@ source = { virtual = "guest-adder-py" }
 [package.dev-dependencies]
 dev = [
     { name = "componentize-py" },
+    { name = "poethepoet" },
 ]
 
 [package.metadata]
 
 [package.metadata.requires-dev]
-dev = [{ name = "componentize-py", specifier = ">=0.19.2" }]
+dev = [
+    { name = "componentize-py", specifier = ">=0.19.2" },
+    { name = "poethepoet", specifier = ">=0.37.0" },
+]
 
 [[package]]
 name = "host-py"
-version = "0.1.0"
+version = "0.1.1"
 source = { virtual = "host-py" }
 dependencies = [
     { name = "wasmtime" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "poethepoet" },
+]
+
 [package.metadata]
 requires-dist = [{ name = "wasmtime", specifier = "==38.0.0" }]
+
+[package.metadata.requires-dev]
+dev = [{ name = "poethepoet", specifier = ">=0.37.0" }]
 
 [[package]]
 name = "importlib-resources"
@@ -157,17 +169,13 @@ source = { virtual = "." }
 
 [package.dev-dependencies]
 dev = [
-    { name = "poethepoet" },
     { name = "ruff" },
 ]
 
 [package.metadata]
 
 [package.metadata.requires-dev]
-dev = [
-    { name = "poethepoet", specifier = ">=0.37.0" },
-    { name = "ruff", specifier = ">=0.14.4" },
-]
+dev = [{ name = "ruff", specifier = ">=0.14.4" }]
 
 [[package]]
 name = "wasmtime"

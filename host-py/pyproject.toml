@@ -8,6 +8,9 @@ dependencies = [
     "wasmtime==38.0.0",
 ]
 
+[dependency-groups]
+dev = ["poethepoet>=0.37.0"]
+
 [tool.poe.tasks.build-adder-rs]
 cwd = "../guest-adder-rs"
 cmd = "cargo build --release --target wasm32-wasip2"
