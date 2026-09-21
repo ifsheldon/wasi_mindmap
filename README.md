@@ -32,5 +32,3 @@ The [Rust command component](./host-command-component) uses `wit-bindgen` and `c
 * Unresolved ones, for those who may be interested in contributing:
     * [Compiled wasm32-wasip2 component from simple code requires excessive WASI interfaces](https://github.com/rust-lang/rust/issues/133235)
     * [Bindgen! gives weird name to an interface well-named in WIT file](https://github.com/bytecodealliance/wasmtime/issues/9774)
-* TODO: Add an improvement issue regarding `Func::post_return`, probably can
-  use [Undroppable Types](https://jack.wrenn.fyi/blog/undroppable/)
