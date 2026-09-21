@@ -800,9 +800,9 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "host-command-component"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
- "wit-bindgen-rt",
+ "wit-bindgen",
 ]
 
 [[package]]
@@ -2491,15 +2491,6 @@ dependencies = [
  "anyhow",
  "heck",
  "wit-parser 0.259.0",
-]
-
-[[package]]
-name = "wit-bindgen-rt"
-version = "0.44.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "653c85dd7aee6fe6f4bded0d242406deadae9819029ce6f7d258c920c384358a"
-dependencies = [
- "bitflags",
 ]
 
 [[package]]

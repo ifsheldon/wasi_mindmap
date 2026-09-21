@@ -19,6 +19,8 @@ guide - [A Complete Guide to WASIp2 for Rust and Python Programmers](https://ide
 
 📌: TODO and welcome contributions
 
+The [Rust command component](./host-command-component) uses `wit-bindgen` and `cargo build --target wasm32-wasip2`, then composes with the Rust adder using `wac`.
+
 ## Related Issues:
 
 * Resolved ones by me, just FYI:
